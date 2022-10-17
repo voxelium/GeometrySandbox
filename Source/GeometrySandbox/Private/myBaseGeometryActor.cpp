@@ -12,16 +12,21 @@ AmyBaseGeometryActor::AmyBaseGeometryActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh");
+	SetRootComponent(BaseMesh);
+
 }
 
 // Called when the game starts or when spawned
 void AmyBaseGeometryActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	InitialLocation = GetActorLocation();
 	
-	PrintTypes();
-	
+	//PrintTypes();
 	// PrintStringTypes();
+	PrintTransform();
 
 	
 }
@@ -54,11 +59,32 @@ void AmyBaseGeometryActor::PrintStringTypes()
 	
 }
 
+void AmyBaseGeometryActor::PrintTransform()
+{
+	FTransform Transform = GetActorTransform();
+	FVector Location = Transform.GetLocation();
+	FRotator Rotation = Transform.Rotator();
+	FVector Scale = Transform.GetScale3D();
+	
+	UE_LOG(aLogBaseGeometry, Warning, TEXT("Actor Name: %s"), *GetName());
+	UE_LOG(aLogBaseGeometry, Warning, TEXT("Transform: %s"), *Transform.ToString());
+	UE_LOG(aLogBaseGeometry, Warning, TEXT("Location: %s"), *Location.ToString());
+	UE_LOG(aLogBaseGeometry, Warning, TEXT("Rotation: %s"), *Rotation.ToString());
+	UE_LOG(aLogBaseGeometry, Warning, TEXT("Scale: %s"), *Scale.ToString());
+	
+	UE_LOG(aLogBaseGeometry, Error, TEXT("Human Transform: %s"), *Transform.ToHumanReadableString());
+}
+
 
 // Called every frame
 void AmyBaseGeometryActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FVector CurrentLocation = GetActorLocation();
+	float time = GetWorld()->GetTimeSeconds();
+	CurrentLocation.Z = InitialLocation.Z + Amplitude * FMath::Sin(Frequency * time);
+	
+	SetActorLocation(CurrentLocation);
 }
 

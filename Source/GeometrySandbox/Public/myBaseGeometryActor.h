@@ -15,6 +15,9 @@ public:
 	// Sets default values for this actor's properties
 	AmyBaseGeometryActor();
 
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent *BaseMesh;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -34,9 +37,18 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Properties")
 	bool HasWeapon = true;
 
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float Amplitude = 50.0f;
+
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float Frequency = 2.0f;
+
 private:
+
+	FVector InitialLocation;
 	void PrintTypes();
 	void PrintStringTypes();
+	void PrintTransform();
 
 public:	
 	// Called every frame
