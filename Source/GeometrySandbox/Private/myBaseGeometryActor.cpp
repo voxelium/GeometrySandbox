@@ -75,16 +75,33 @@ void AmyBaseGeometryActor::PrintTransform()
 	UE_LOG(aLogBaseGeometry, Error, TEXT("Human Transform: %s"), *Transform.ToHumanReadableString());
 }
 
+void AmyBaseGeometryActor::HandleMovement()
+{
+	switch (GeometryData.MoveType)
+	{
+	case EMovementType::Sin:
+		{
+			FVector CurrentLocation = GetActorLocation();
+			float Time = GetWorld()->GetTimeSeconds();
+			CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * Time);
+	
+			SetActorLocation(CurrentLocation);
+		}
+		break;
+
+	case EMovementType::Static: break;
+	default: break;
+	}
+}
+
 
 // Called every frame
 void AmyBaseGeometryActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector CurrentLocation = GetActorLocation();
-	float time = GetWorld()->GetTimeSeconds();
-	CurrentLocation.Z = InitialLocation.Z + Amplitude * FMath::Sin(Frequency * time);
+	HandleMovement();
 	
-	SetActorLocation(CurrentLocation);
+
 }
 

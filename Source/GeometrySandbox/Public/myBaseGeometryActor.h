@@ -6,6 +6,31 @@
 #include "GameFramework/Actor.h"
 #include "myBaseGeometryActor.generated.h"
 
+UENUM(BlueprintType)
+enum class EMovementType : uint8
+{
+	Sin,
+	Static
+};
+
+
+USTRUCT(BlueprintType)
+struct FGeometryData
+{
+	GENERATED_USTRUCT_BODY()
+	
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float Amplitude = 50.0f;
+
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float Frequency = 2.0f;
+
+	UPROPERTY(EditAnywhere, Category="Movement")
+	EMovementType MoveType = EMovementType::Static;
+
+	
+};
+
 UCLASS()
 class GEOMETRYSANDBOX_API AmyBaseGeometryActor : public AActor
 {
@@ -22,6 +47,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, Category="Geometry Data")
+	FGeometryData GeometryData;
+	
 	UPROPERTY(EditAnywhere, Category="Properties")
 	int32 WeaponsNum = 4;
 
@@ -37,11 +65,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Properties")
 	bool HasWeapon = true;
 
-	UPROPERTY(EditAnywhere, Category="Movement")
-	float Amplitude = 50.0f;
-
-	UPROPERTY(EditAnywhere, Category="Movement")
-	float Frequency = 2.0f;
+	
 
 private:
 
@@ -49,6 +73,7 @@ private:
 	void PrintTypes();
 	void PrintStringTypes();
 	void PrintTransform();
+	void HandleMovement();
 
 public:	
 	// Called every frame
