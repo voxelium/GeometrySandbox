@@ -28,6 +28,14 @@ struct FGeometryData
 	UPROPERTY(EditAnywhere, Category="Movement")
 	EMovementType MoveType = EMovementType::Static;
 
+	UPROPERTY(EditAnywhere, Category="Design")
+	FLinearColor Color = FLinearColor::Black;
+
+	UPROPERTY(EditAnywhere, Category="Design")
+	float TimerRate = 3.0f;
+
+	UPROPERTY(EditAnywhere, Category="Design")
+	int32 MaxTimerCount = 5;
 	
 };
 
@@ -65,18 +73,28 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Properties")
 	bool HasWeapon = true;
 
+
+	
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 	
 
 private:
 
+	FTimerHandle TimerHandle;
+	// const int32 MaxTimerCount = 5;
+	int32 TimerCount = 0;
+	
 	FVector InitialLocation;
 	void PrintTypes();
 	void PrintStringTypes();
 	void PrintTransform();
 	void HandleMovement();
+	void SetColor(const FLinearColor& Color);
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	void OnTimerFired();
+
+
 
 };

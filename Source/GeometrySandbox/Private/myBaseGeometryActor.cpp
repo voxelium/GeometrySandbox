@@ -23,11 +23,21 @@ void AmyBaseGeometryActor::BeginPlay()
 	Super::BeginPlay();
 
 	InitialLocation = GetActorLocation();
-	
+
+	//Вывожу в Log данные
 	//PrintTypes();
+
+	//Вывожу данные в Log и на экран
 	// PrintStringTypes();
+
+	//Вывожу в Log данные о трасформации
 	PrintTransform();
 
+	//Создаю инстанс материала и присваиваю его к объекту
+	SetColor(GeometryData.Color);
+
+	//Создаю таймер для смены материала
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AmyBaseGeometryActor::OnTimerFired, GeometryData.TimerRate, true);
 	
 }
 
@@ -92,6 +102,30 @@ void AmyBaseGeometryActor::HandleMovement()
 	case EMovementType::Static: break;
 	default: break;
 	}
+}
+
+void AmyBaseGeometryActor::SetColor(const FLinearColor& Color)
+{
+	UMaterialInstanceDynamic* DynMaterial = BaseMesh->CreateAndSetMaterialInstanceDynamic(0);
+	if (DynMaterial)
+	{
+		DynMaterial->SetVectorParameterValue("Color", Color);
+	}
+}
+
+void AmyBaseGeometryActor::OnTimerFired()
+{
+	if(++TimerCount <= GeometryData.MaxTimerCount)
+	{
+		const FLinearColor NewColor = FLinearColor::MakeRandomColor();
+		SetColor(NewColor);
+	}
+
+	else
+	{
+		GetWorldTimerManager().ClearTimer(TimerHandle);
+	}
+	
 }
 
 
