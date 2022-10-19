@@ -63,9 +63,14 @@ void AmyBaseGeometryActor::PrintStringTypes()
 
 	FString Stat = FString::Printf(TEXT(" \n == ALL STAT ==  \n %s \n %s \n %s "), *WeaponsNumStr, *HealthStr, *IsDeadStr);
 	UE_LOG(aLogBaseGeometry, Warning, TEXT("%s"), *Stat);
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, Name, true);
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, Stat, true);
+
+	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, Name, true);
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, Stat, true);
 	
 }
 
@@ -92,10 +97,15 @@ void AmyBaseGeometryActor::HandleMovement()
 	case EMovementType::Sin:
 		{
 			FVector CurrentLocation = GetActorLocation();
-			float Time = GetWorld()->GetTimeSeconds();
-			CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * Time);
+
+			if (GetWorld())
+			{
+				float Time = GetWorld()->GetTimeSeconds();
+				CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * Time);
 	
-			SetActorLocation(CurrentLocation);
+				SetActorLocation(CurrentLocation);
+			}
+			
 		}
 		break;
 
@@ -106,6 +116,7 @@ void AmyBaseGeometryActor::HandleMovement()
 
 void AmyBaseGeometryActor::SetColor(const FLinearColor& Color)
 {
+	if(!BaseMesh) return;
 	UMaterialInstanceDynamic* DynMaterial = BaseMesh->CreateAndSetMaterialInstanceDynamic(0);
 	if (DynMaterial)
 	{
