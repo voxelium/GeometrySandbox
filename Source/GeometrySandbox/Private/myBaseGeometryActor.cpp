@@ -130,11 +130,13 @@ void AmyBaseGeometryActor::OnTimerFired()
 	{
 		const FLinearColor NewColor = FLinearColor::MakeRandomColor();
 		SetColor(NewColor);
+		OncolorChanged.Broadcast(NewColor, GetName());
 	}
 
 	else
 	{
 		GetWorldTimerManager().ClearTimer(TimerHandle);
+		OnTimerFinished.Broadcast(this);
 	}
 	
 }
