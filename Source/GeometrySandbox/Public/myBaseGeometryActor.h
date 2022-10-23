@@ -77,6 +77,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Geometry Data")
 	FGeometryData GeometryData;
 	

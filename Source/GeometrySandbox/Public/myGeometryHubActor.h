@@ -52,6 +52,10 @@ private:
 	void DoActorSpawn1();
 	void DoActorSpawn2();
 	void DoActorSpawn3();
+
+	UFUNCTION()
+	void FOncolorChanged (const FLinearColor& Color, const FString& Name);
+	void FOnTimerFinished (AActor* Actor);
 	
 
 };

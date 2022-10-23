@@ -2,7 +2,11 @@
 
 
 #include "myGeometryHubActor.h"
+
+#include "GeometryBase.h"
 #include "Engine/World.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogGeometryHub, All, All)
 
 // Sets default values
 AmyGeometryHubActor::AmyGeometryHubActor()
@@ -17,10 +21,10 @@ void AmyGeometryHubActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	DoActorSpawn1();
+	// DoActorSpawn1();
 
 	//Спаун с отложенным BeginPlay
-	DoActorSpawn2();
+	// DoActorSpawn2();
 
 	//Спаун с предварительной настройкой данных для акторов в Editor
 	DoActorSpawn3();
@@ -95,10 +99,30 @@ void AmyGeometryHubActor::DoActorSpawn3()
 			if (Geometry)
 			{
 				Geometry->SetGeometryData(Payload.Data);
+				Geometry->OncolorChanged.AddDynamic(this, &AmyGeometryHubActor::FOncolorChanged);
+				Geometry->OnTimerFinished.AddUObject(this, &AmyGeometryHubActor::FOnTimerFinished);
 				Geometry->FinishSpawning(Payload.InitialTransform);
 				
 			}
 		}
 	}
+}
+
+void AmyGeometryHubActor::FOncolorChanged(const FLinearColor& Color, const FString& Name)
+{
+	UE_LOG(LogGeometryHub, Warning, TEXT("Actor name: %s Color %s"), *Name, *Color.ToString());
+}
+
+void AmyGeometryHubActor::FOnTimerFinished(AActor* Actor)
+{
+	if(!Actor) return;
+	UE_LOG(LogGeometryHub, Error, TEXT("Timer finished: %s"), *Actor->GetName());
+	AmyBaseGeometryActor* Geometry = Cast<AmyBaseGeometryActor>(Actor);
+
+	if(!Geometry) return;
+	UE_LOG(LogGeometryHub, Display, TEXT("Cast is success, amplitude %f"), Geometry->GetGeometryData().Amplitude);
+
+	// Geometry->Destroy();
+	Geometry->SetLifeSpan(6);
 }
 

@@ -41,6 +41,13 @@ void AmyBaseGeometryActor::BeginPlay()
 	
 }
 
+void AmyBaseGeometryActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	UE_LOG(aLogBaseGeometry, Error, TEXT("Actor is dead %s"), *GetName());
+	Super::EndPlay(EndPlayReason);
+	
+}
+
 void AmyBaseGeometryActor::PrintTypes()
 {
 	UE_LOG(aLogBaseGeometry,Warning,TEXT("Actor Name: %s"), *GetName());
