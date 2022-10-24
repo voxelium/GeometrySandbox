@@ -3,8 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Pawn.h"
 #include "SandboxPawn.generated.h"
+
+// class UCameraComponent;
 
 UCLASS()
 class GEOMETRYSANDBOX_API ASandboxPawn : public APawn
@@ -18,9 +21,20 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* SceneComponent;
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	UStaticMeshComponent* StaticMeshComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* CameraComponent;
+	
 	UPROPERTY(EditAnywhere)
 	float Velocity = 300.0f;
 
+
+	virtual void PossessedBy(AController* NewController) override;
+
+	virtual void UnPossessed() override;
+	
 private:
 	FVector VelocityVector = FVector::ZeroVector;
 
